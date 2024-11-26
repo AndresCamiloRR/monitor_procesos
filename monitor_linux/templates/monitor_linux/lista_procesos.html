@@ -1,0 +1,62 @@
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID del Proceso</th>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="procesos-tbody">
+        {% for proceso in procesos %}
+        <tr>
+            <td>{{ proceso.Id }}</td>
+            <td>{{ proceso.Name }}</td>
+            <td>
+                {% if proceso.State == 'running' %}
+                <i class="fas fa-play text-success"></i>
+                {% elif proceso.State == 'exited' %}
+                <i class="fas fa-stop text-danger"></i>
+                {% endif %}
+            </td>
+            <td>
+                <form method="post" action="{% url 'terminar_proceso' proceso.Id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Terminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    const ws = new WebSocket('ws://' + window.location.host + '/ws/procesos/');
+
+    ws.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        const tbody = document.getElementById('procesos-tbody');
+        tbody.innerHTML = '';
+        data.procesos.forEach(proceso => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${proceso.Id}</td>
+                <td>${proceso.Name}</td>
+                <td>${proceso.State === 'running' ? '<i class="fas fa-play text-success"></i>' : '<i class="fas fa-stop text-danger"></i>'}</td>
+                <td>
+                    <form method="post" action="/terminar/${proceso.Id}/">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${document.querySelector('[name=csrfmiddlewaretoken]').value}">
+                        <button type="submit" class="btn btn-danger btn-sm">Terminar</button>
+                    </form>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    };
+</script>
