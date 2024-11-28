@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'monitor_windows',
-    'monitor_linux',
+    'monitor'
 ]
 
 MIDDLEWARE = [

@@ -48,9 +48,9 @@
             row.innerHTML = `
                 <td>${proceso.Id}</td>
                 <td>${proceso.Name}</td>
-                <td>${proceso.State === 'running' ? '<i class="fas fa-play text-success"></i>' : '<i class="fas fa-stop text-danger"></i>'}</td>
+                <td>${proceso.State === 'running' ? '<i class="fas fa-play text-success"></i>' : '<i class="fas fa-stop text-danger'></i>'}</td>
                 <td>
-                    <form method="post" action="/terminar/${proceso.Id}/">
+                    <form method="post" action="/monitor/terminar/${proceso.Id}/">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${document.querySelector('[name=csrfmiddlewaretoken]').value}">
                         <button type="submit" class="btn btn-danger btn-sm">Terminar</button>
                     </form>
