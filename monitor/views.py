@@ -18,7 +18,7 @@ def lista_procesos(request):
         procesos = []
         for line in result.stdout.splitlines():
             pid, name, state = line.split(None, 2)
-            procesos.append({'Id': pid, 'Name': name, 'State': 'running' if state == 'R' else 'sleeping'})
+            procesos.append({'Id': pid, 'Name': name, 'State': 'running' if state == 'R' else 'exited'})
     end_time = time.time()
     print(f"Process list retrieved and converted to JSON in {end_time - start_time} seconds")
     return render(request, 'monitor/lista_procesos.html', {'procesos': procesos})
